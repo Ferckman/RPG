@@ -1,0 +1,6 @@
+# Exclude build executables
+*.exe
+*.out
+
+# Exclude local VS Code configuration folder
+.vscode/
