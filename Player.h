@@ -8,26 +8,21 @@
 
 class Player : public Character {
 private:
-    int mana;
-    int maxMana;
     // Ownership of Items managed cleanly via unique_ptr (automatic cleanup, zero leaks)
     std::vector<std::unique_ptr<Item>> inventory;
 
 public:
-    Player(const std::string& name, int health, int attackPower, int mana);
+    Player(const std::string& name, int health, int attackPower);
     ~Player() override = default;
 
     // Inventory Management Methods
     void addItem(std::unique_ptr<Item> item);
     void showInventory() const;
-    void useItem(size_t index);
 
     // Player Special Action
+    void attack(Character& target) override;
+    bool useItem(size_t index, Character& target); // Returns true if item was used successfully
     void heal(int amount);
-
-    // Getters
-    int getMana() const { return mana; }
-    int getMaxMana() const { return maxMana; }
 };
 
 #endif // PLAYER_H

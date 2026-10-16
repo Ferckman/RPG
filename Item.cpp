@@ -1,8 +1,8 @@
 #include "Item.h"
 #include <iostream>
 
-Item::Item(const std::string& name, ItemType type, int value)
-    : name(name), type(type), value(value) {
+Item::Item(const std::string& name, ItemType type, int value, int effectTurns)
+    : name(name), type(type), value(value), effectTurns(effectTurns) {
     std::cout << "[Item] " << name << " created.\n";
 }
 

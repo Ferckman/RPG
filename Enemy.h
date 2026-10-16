@@ -4,17 +4,13 @@
 #include "Character.h"
 
 class Enemy : public Character {
-private:
-    int xpReward;
-
 public:
-    Enemy(const std::string& name, int health, int attackPower, int xpReward);
+    Enemy(const std::string& name, int health, int attackPower);
     ~Enemy() override = default;
 
     // Basic AI behavior method
     void takeTurn(Character& target);
-
-    int getXpReward() const { return xpReward; }
+    void attack(Character& target) override;
 };
 
 #endif // ENEMY_H

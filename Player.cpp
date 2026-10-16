@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(const std::string& name, int health, int attackPower, int mana)
-    : Character(name, health, attackPower), mana(mana), maxMana(mana) {}
+Player::Player(const std::string& name, int health, int attackPower)
+    : Character(name, health, attackPower) {}
 
 void Player::addItem(std::unique_ptr<Item> item) {
     std::cout << name << " acquired item: " << item->getName() << "\n";
@@ -22,22 +22,33 @@ void Player::showInventory() const {
     }
 }
 
-void Player::useItem(size_t index) {
+// Player attack implementation
+void Player::attack(Character& target) {
+        std::cout << name << " attacks " << target.getName() << " with a sword for " << attackPower << " damage!\n";
+        target.takeDamage(attackPower);
+}
+
+bool Player::useItem(size_t index, Character& target) {
     if (index >= inventory.size()) {
         std::cout << "Invalid item selection!\n";
-        return;
+        return false;
     }
 
-    // Access the item
+    // Access the item using smart pointer reference
     auto& item = inventory[index];
-    std::cout << name << " used " << item->getName() << "!\n";
+    std::cout << name << " uses " << item->getName() << "!\n";
 
     if (item->getType() == ItemType::HEALING) {
         heal(item->getValue());
+    } 
+    else if (item->getType() == ItemType::EFFECT) {
+        target.addStatusEffect(std::make_unique<PoisonEffect>(item->getEffectTurns(), item->getValue()));
+        std::cout << target.getName() << " has been poisoned by the arrow!\n";
     }
 
-    // Remove the item from inventory. unique_ptr will automatically deallocate memory!
+    // Remove the item from inventory. unique_ptr automatically deallocates memory!
     inventory.erase(inventory.begin() + index);
+    return true;
 }
 
 void Player::heal(int amount) {

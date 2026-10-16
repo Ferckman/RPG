@@ -1,34 +1,39 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
-
+#pragma once
 #include <string>
-#include <iostream>
+#include <vector>
+#include <memory>
+#include "StatusEffect.h"
 
-// Base class representing any entity in the game
 class Character {
 protected:
     std::string name;
     int health;
     int maxHealth;
     int attackPower;
+    int armor;
+    
+    // List of active effects managed via smart pointers
+    std::vector<std::unique_ptr<StatusEffect>> activeEffects;
 
 public:
-    // Constructor
-    Character(const std::string& name, int health, int attackPower);
+    Character(const std::string& nameVal, int healthVal, int attackVal, int armorVal = 0)
+        : name(nameVal), health(healthVal), maxHealth(healthVal), 
+          attackPower(attackVal), armor(armorVal) {}
 
-    // Virtual destructor to ensure proper cleanup in derived classes
     virtual ~Character() = default;
 
-    // Core gameplay methods
+    virtual void attack(Character& target) = 0;
     virtual void takeDamage(int amount);
-    virtual void attack(Character& target);
-    
-    bool isAlive() const;
 
-    // Getters
+    // Status Effect Management
+    void addStatusEffect(std::unique_ptr<StatusEffect> effect);
+    void updateEffects();
+
+    // Getters and Setters
     std::string getName() const { return name; }
     int getHealth() const { return health; }
-    int getMaxHealth() const { return maxHealth; }
+    bool isAlive() const { return health > 0; }
+    int getArmor() const { return armor; }
+    void setArmor(int val) { armor = val; }
+    void heal(int amount);
 };
-
-#endif // CHARACTER_H
